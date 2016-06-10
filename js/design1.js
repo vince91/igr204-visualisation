@@ -1,5 +1,5 @@
-var width = 600;
-var height = 600;
+var width = 300;
+var height = 300;
 // var dataset = [ 1,1,1,1,1];
 var data = [];
 var allData = [];
@@ -11,7 +11,7 @@ var svg = d3.select("body").append("svg")
 // var pie = d3.layout.pie();
 var pi = Math.PI;
 var outerRadius = width/2;
-var outerRadiusTwo = width/4;
+var outerRadiusTwo = width/2;
 var innerRadius = width/4;
 var innerRadiusTwo = width/16;
 var selectedCountry = "UK";
@@ -87,7 +87,7 @@ function draw(){
 	        .data(data)
 	        .enter()
 	        .append("g")
-	        .attr("transform","translate("+outerRadius/2+","+outerRadius/2+")");
+	        .attr("transform","translate("+outerRadius+","+outerRadius+")");
 	// to display the name of the country in the center
 	svg.append("text").attr('x', width/2).attr('y', height/2)
 		.attr("font-family","sans-serif")
