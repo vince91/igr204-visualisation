@@ -1,5 +1,18 @@
 <html>
 <head>
+<style>
+.axis path,
+.axis line{
+		fill: none;
+		stroke: black;
+		shape-rendering: crispEdges;
+}
+.axis text {
+		font-family: sans-serif;
+		font-size: 11px;
+}
+</style>
+
 	<meta charset="utf-8">
 	<title>Design #3</title>
 	<link rel="stylesheet" href="css/bootstrap.css">
@@ -8,6 +21,49 @@
 	<script type="text/javascript" src="js/d3.js"></script>
 </head>
 <body>
+	<div class="container">
+		<div class="page-header">
+			<h1>Comparasion between different features</h1>
+	</div>
+	<div class="dropdown" id="dropdown">
+	  <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Chart type
+	  <span class="caret"></span></button>
+	  <ul class="dropdown-menu" id="chart_type">
+	    <li><a href="#">HTML</a></li>
+	    <li><a href="#">CSS</a></li>
+	    <li><a href="#">JavaScript</a></li>
+	  </ul>
+
+		<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">X axis
+	  <span class="caret"></span></button>
+	  <ul class="dropdown-menu" id="x_axis">
+	    <li><a href="#">HTML</a></li>
+	    <li><a href="#">CSS</a></li>
+	    <li><a href="#">JavaScript</a></li>
+	  </ul>
+
+
+		<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Y axis
+		<span class="caret"></span></button>
+		<ul class="dropdown-menu" id="y_axis">
+			<li><a href="#">HTML</a></li>
+			<li><a href="#">CSS</a></li>
+			<li><a href="#">JavaScript</a></li>
+		</ul>
+
+		<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Z axis
+		<span class="caret"></span></button>
+		<ul class="dropdown-menu" id="z_axis">
+			<li><a href="#">HTML</a></li>
+			<li><a href="#">CSS</a></li>
+			<li><a href="#">JavaScript</a></li>
+		</ul>
+
+
+
+	</div>
+
+
 	<script type="text/javascript" src="js/design3.js"></script>
 </body>
 </html>
