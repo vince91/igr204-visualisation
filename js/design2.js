@@ -2,6 +2,20 @@ var svg = null;
 var dataset = null;
 var count = 0;
 var color_opacity = null;
+var dsv = d3.dsv(";", "text/plain");
+
+var question_dic = {
+  "Happiness index" :"Y11_Q41",
+  "Satisfaction with education": "Y11_Q40a",
+  "Satisfaction with present job": "Y11_Q40b",
+  "Satisfaction with present standard of living": "Y11_Q40c",
+  "Satisfaction with accommodation": "Y11_Q40d",
+  "Satisfaction with family life": "Y11_Q40e",
+  "Satisfaction with health": "Y11_Q40f",
+  "Satisfaction with social life": "Y11_Q40g",
+  "Satisfaction with economic situation of the country": "Y11_Q40h"
+}
+
 
 function draw() {
     svg.selectAll(".europe")
@@ -25,6 +39,34 @@ function mouse_over() {
        })
 };
 
+function load_data(theme) {
+  var questionCode = question_dic[theme];
+  $("h1").text(theme);
+  // load csv
+  dsv("data/all_questions.csv", function(d) {
+      return {
+          countryCode: d.CountryCode.toLowerCase(),
+          questionCode: d.question_code,
+          subset: d.subset,
+          answer: d.answer,
+          mean: +d.Mean
+      }
+  }, function(error, rows) {
+      console.log(rows[0]);
+      dataset = rows.filter(function(row) {
+          return row.questionCode == questionCode;
+      });
+
+      color_opacity = d3.scale.linear()
+                      .domain(d3.extent(dataset, function(row) {
+                          return row.mean;
+                      })).range([0.3, 1]);
+      draw();
+      mouse_over();
+
+  });
+}
+
 $(document).ready(function() {
 
     // add svg to page
@@ -33,29 +75,12 @@ $(document).ready(function() {
         $("svg").replaceWith(xml.documentElement);
         svg = d3.select("svg");
 
-        // load csv
-        var dsv = d3.dsv(";", "text/plain")
-        dsv("data/all_questions.csv", function(d) {
-            return {
-                countryCode: d.CountryCode.toLowerCase(),
-                questionCode: d.question_code,
-                subset: d.subset,
-                answer: d.answer,
-                mean: +d.Mean
-            }
-        }, function(error, rows) {
-            console.log(rows[0]);
-            dataset = rows.filter(function(row) {
-                return row.questionCode == "Y11_Q41"
-            });
+        load_data("Happiness index");
+        
+    });
 
-            color_opacity = d3.scale.linear()
-                            .domain(d3.extent(dataset, function(row) {
-                                return row.mean;
-                            })).range([0.3, 1]);
-            draw();
-            mouse_over();
-
-        });
+    // dropdown 
+    $(".dropdown li").click(function(e) {
+      load_data(e.target.text);
     });
 });
