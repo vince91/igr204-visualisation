@@ -4,61 +4,108 @@ var height = 300;
 var data = [];
 var allData = [];
 var countries = [];
-var svg = d3.select("body").append("svg")
-			.attr("width",width)
-			.attr("height",height)
-
-// var pie = d3.layout.pie();
 var pi = Math.PI;
 var outerRadius = width/2;
 var outerRadiusTwo = width/2;
 var innerRadius = width/4;
 var innerRadiusTwo = width/16;
 var selectedCountry = "UK";
+var svg;
+var countryId=0;
+$('#btn').on('click', function (e) {
+	addCountry(false);
 
-var dsv = d3.dsv(";", "text/plain");
-dsv("data/all_questions.csv")
-	.row(function(d,i){
-		return {
-			countryCode: d.CountryCode,
-			questionCode: d.question_code,
-			subset: d.subset,
-			answer: d.answer,
-			mean: +d.Mean
-		};
-	})
-	.get(function(error,rows){
-		console.log("Loaded "+rows.length+" rows");
-		if(rows.length>0){
-			console.log("First row: ", rows[0]);
-			console.log("Last row: ", rows[rows.length-1]);
-		}
-		allData = d3.nest()
-  			.key(function(d) { return d.countryCode; })
-  			.entries(rows);
-  		// countries = allData.keys();
-  		// console.log(allData);
+})
+addCountry(true);
+function loadData(){
+	var dsv = d3.dsv(";", "text/plain");
+	dsv("data/all_questions.csv")
+		.row(function(d,i){
+			return {
+				countryCode: d.CountryCode,
+				questionCode: d.question_code,
+				subset: d.subset,
+				answer: d.answer,
+				mean: +d.Mean
+			};
+		})
+		.get(function(error,rows){
+			console.log("Loaded "+rows.length+" rows");
+			if(rows.length>0){
+				console.log("First row: ", rows[0]);
+				console.log("Last row: ", rows[rows.length-1]);
+			}
+			allData = d3.nest()
+	  			.key(function(d) { return d.countryCode; })
+	  			.entries(rows);
+	  		var id = "dropdown";
+	  		loadCountry(id);
+			countryId++;
+			draw();
+		})
+}
 
+function addCountry(init){
+	if(init){
+		svg = d3.select("body").select("div.country#c"+countryId.toString()).append("svg")
+			.attr("width",width)
+			.attr("height",height);
+		loadData();
+	}
+	else{
+		var newDiv =  document.createElement("div");
+		newDiv.className = "country";
+		newDiv.id = "c"+countryId.toString();
+		newDiv.innerHTML = '				<div class="row",id="in">\
+					<div class="col-md-2">\
+					    <div class="container">\
+							<div class="dropdown" id="dropdown'+countryId.toString()+'">\
+							  <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Country Code\
+							  <span class="caret"></span></button>\
+							  <ul class="dropdown-menu" id="countrylist">\
+							   \
+							  </ul>\
+							</div>\
+						</div>\
+					</div>\
+					<div class="col-md-2">\
+						<div id="question">Question</div>\
+						<div id="answer">Answer</div>\
+					</div>\
+				</div>';
+		document.body.appendChild(newDiv);
+		var id = "dropdown"+countryId.toString();
+	  	loadCountry(id);
 		
-		loadCountry();
+		svg = d3.select("body").select("div.country#c"+countryId.toString()).append("svg")
+			.attr("width",width)
+			.attr("height",height);
+		console.log(svg);
+		countryId++;
 		draw();
+	}
 
-	})
-function loadCountry(){
-	var countryList = $('#dropdown .dropdown-menu');
+}
+
+function loadCountry(id){
+	countryList = $('#'+id+' .dropdown-menu');
+	console.log(allData);
 	countryList.html('');
 	$(allData).each(function(index, element){
     	var item = ('<li><a href="#">'+element.key+'</a></li>');
     	countryList.append(item);
 	});
-	$('#dropdown').on('click', 'a', function(e){
+	$('#'+id).on('click', 'a', function(e){
 	    var setText = $(e.currentTarget).text(),
 	        newHtml = setText + '&nbsp;<span class="caret"></span>';
-	    $('#dropdown > button').html(newHtml);
+	    $('#'+id+' > button').html(newHtml);
+	    console.log("!!!");
 	});
-	$('#countrylist li a').on('click', function(){
+	// countryList.$('li a').on('click', function(){
+	$('#'+id+' .dropdown-menu li a').on('click', function(){
 	    selectedCountry = $(this).text();
 	    draw();
+	    console.log("T_T");
 	});
 }
 
@@ -94,6 +141,7 @@ function draw(){
 		.attr('font-size', '20px')
 		.attr('fill', 'red')
 		.text(selectedCountry);
+	console.log("??");
 	arcs.append("path")
 	        .attr("fill",function(d,i){
 	            return color(i);
