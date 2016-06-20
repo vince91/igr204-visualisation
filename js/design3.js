@@ -380,11 +380,19 @@ svg2.selectAll(".point")
   $(document).ready(function() {
       // add svg to page
       load_data("data/happiness-income,country.csv","Income");
-
       });
-
+    // <li><a href="#">Happiness-country,age</a></li>
       // dropdown
-  // $(".dropdown li").click(function(e) {
-  //       load_data(e.target.text);
-  //     });
-  // });
+  $(".dropdown li").click(function(e) {
+    if(e.target.text == "Happiness-country,income")
+    {
+      svg.selectAll("*").remove();
+      svg2.selectAll("*").remove();
+      load_data("data/happiness-income,country.csv","Income");
+    }
+      else{
+      svg.selectAll("*").remove();
+      svg2.selectAll("*").remove();
+      load_data("data/happiness-age,country.csv","Age");
+      }
+    });
