@@ -12,6 +12,19 @@ var innerRadiusTwo = width/16;
 var selectedCountry = "UK";
 var svg;
 var countryId=0;
+
+var question_dic = {
+  "Y11_Q41":"Happiness index",
+  "Y11_Q40a":"Satisfaction with education",
+  "Y11_Q40b":"Satisfaction with present job",
+  "Y11_Q40c":"Satisfaction with present standard of living",
+  "Y11_Q40d":"Satisfaction with accommodation",
+  "Y11_Q40e":"Satisfaction with family life",
+  "Y11_Q40f":"Satisfaction with health",
+  "Y11_Q40g":"Satisfaction with social life",
+  "Y11_Q40h":"Satisfaction with economic situation of the country"
+}
+
 $('#btn').on('click', function (e) {
 	addCountry(false);
 
@@ -38,8 +51,7 @@ function loadData(){
 			allData = d3.nest()
 	  			.key(function(d) { return d.countryCode; })
 	  			.entries(rows);
-	  		var id = "dropdown";
-	  		loadCountry(id);
+	  		loadCountry();
 			countryId++;
 			draw();
 		})
@@ -54,11 +66,10 @@ function addCountry(init){
 	}
 	else{
 		var newDiv =  document.createElement("div");
-		newDiv.className = "country";
-		newDiv.id = "c"+countryId.toString();
-		newDiv.innerHTML = '				<div class="row",id="in">\
-					<div class="col-md-2">\
-					    <div class="container">\
+		newDiv.className = "col-md-4";
+		// newDiv.className = "country";
+		// newDiv.id = "c"+countryId.toString();
+		newDiv.innerHTML = '<div class="country" id=c'+countryId.toString()+'><div class="container">\
 							<div class="dropdown" id="dropdown'+countryId.toString()+'">\
 							  <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Country Code\
 							  <span class="caret"></span></button>\
@@ -66,21 +77,13 @@ function addCountry(init){
 							   \
 							  </ul>\
 							</div>\
-						</div>\
-					</div>\
-					<div class="col-md-2">\
-						<div id="question">Question</div>\
-						<div id="answer">Answer</div>\
-					</div>\
-				</div>';
-		document.body.appendChild(newDiv);
-		var id = "dropdown"+countryId.toString();
-	  	loadCountry(id);
+						</div></div>';
+		$("#out").append(newDiv);
+	  	loadCountry(countryId);
 		
 		svg = d3.select("body").select("div.country#c"+countryId.toString()).append("svg")
 			.attr("width",width)
 			.attr("height",height);
-		console.log(svg);
 		countryId++;
 		draw();
 	}
@@ -88,31 +91,37 @@ function addCountry(init){
 }
 
 function loadCountry(id){
-	countryList = $('#'+id+' .dropdown-menu');
-	console.log(allData);
+	if(id){
+		idStr=id.toString();
+	}
+	else{
+		idStr='';
+	}
+	countryList = $('#dropdown'+idStr+' .dropdown-menu');
 	countryList.html('');
 	$(allData).each(function(index, element){
     	var item = ('<li><a href="#">'+element.key+'</a></li>');
     	countryList.append(item);
 	});
-	$('#'+id).on('click', 'a', function(e){
+	$('#dropdown'+idStr).on('click', 'a', function(e){
 	    var setText = $(e.currentTarget).text(),
 	        newHtml = setText + '&nbsp;<span class="caret"></span>';
-	    $('#'+id+' > button').html(newHtml);
-	    console.log("!!!");
+	    $('#dropdown'+idStr+' > button').html(newHtml);
 	});
 	// countryList.$('li a').on('click', function(){
-	$('#'+id+' .dropdown-menu li a').on('click', function(){
+	$('#dropdown'+idStr+' .dropdown-menu li a').on('click', function(){
 	    selectedCountry = $(this).text();
-	    draw();
-	    console.log("T_T");
+	    draw(id);
 	});
 }
 
 function updateCountry(){
 
 }
-function draw(){
+function draw(id){
+	if(id){
+		svg = d3.select("body").select("div.country#c"+id.toString()).select("svg");
+	}
 	svg.html('');
 	for (var i = allData.length - 1; i >= 0; i--) {
 		if(allData[i].key == selectedCountry){
@@ -141,16 +150,14 @@ function draw(){
 		.attr('font-size', '20px')
 		.attr('fill', 'red')
 		.text(selectedCountry);
-	console.log("??");
 	arcs.append("path")
 	        .attr("fill",function(d,i){
 	            return color(i);
 	        })
 	        .attr("d",arc)
 	        .on("mouseover",function(d,i){
-	        	$("#question").text(d.questionCode);
+	        	$("#question").text(question_dic[d.questionCode]);
 	        	$("#answer").text(d.mean);
-	        	console.log(d.questionCode);
 	            // d3.select(this)
 	            //         .transition()
 	            //         .duration(2000)
