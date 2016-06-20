@@ -10,6 +10,7 @@ var outerRadiusTwo = width/2;
 var innerRadius = width/4;
 var innerRadiusTwo = width/16;
 var selectedCountry = "UK";
+var selectedCountries = [];
 var svg;
 var countryId=0;
 
@@ -66,7 +67,9 @@ function addCountry(init){
 	}
 	else{
 		var newDiv =  document.createElement("div");
+		var id=countryId.toString();
 		newDiv.className = "col-md-4";
+		newDiv.id = countryId.toString();
 		// newDiv.className = "country";
 		// newDiv.id = "c"+countryId.toString();
 		newDiv.innerHTML = '<div class="country" id=c'+countryId.toString()+'><div class="container">\
@@ -77,10 +80,13 @@ function addCountry(init){
 							   \
 							  </ul>\
 							</div>\
-						</div></div>';
+						</div><a id="delete'+countryId.toString()+'">Delete</a></div>';
 		$("#out").append(newDiv);
 	  	loadCountry(countryId);
-		
+		$('a#delete'+id.toString()).on('click',function(){
+			console.log("~~~"+id.toString());
+			$('.col-md-4#'+id.toString()).remove();
+		});
 		svg = d3.select("body").select("div.country#c"+countryId.toString()).append("svg")
 			.attr("width",width)
 			.attr("height",height);
@@ -91,6 +97,7 @@ function addCountry(init){
 }
 
 function loadCountry(id){
+	var idStr;
 	if(id){
 		idStr=id.toString();
 	}
