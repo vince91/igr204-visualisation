@@ -7,12 +7,21 @@ width_ = 800 - padding.left - padding.right,
 height_ = 400 -padding.top - padding.bottom;
 var dataset = [];
 var dataset2 = [];
+var threshold = 0.;
+var valOpacity = 0.5;
+var valOpacity = function(d) {
+      if ((d.mean) > nRadius) {
+        return 0.5;
+      }
+      else {
+        return 0.1;
+      }
+    };
 /*create a svg container*/
 var chart = document.createElement("div");
 chart.className = "Chart";
 chart.id = "C1";
 document.body.appendChild(chart);
-
 var svg = d3.select("body")
             .select("div.Chart#C1")
             .append("svg")
@@ -29,11 +38,12 @@ var svg2 = d3.select("body")
             .append("g")
             .attr("transform", "translate(" + padding.left + "," + padding.top + ")");
 
+
+function load_data(url,label) {
+
 // var object = chart.appendChild(svg);
-
-
 var dsv = d3.dsv(",", "text/plain");
-dsv("data/happiness-income,country.csv")
+dsv(url)
 	.row(function(d,i){
 		return {
 			countryCode: d["CountryCode"],
@@ -67,9 +77,11 @@ dsv("data/happiness-income,country.csv")
   w = d3.scale.ordinal()
                      .domain(dataset.map(function(d){return(d.subset);}))
                      .rangeRoundBands([height_,0]);
-  draw();
+  draw(label);
+  mouse_over() ;
 
   });
+}
 
 // var dsv2 = d3.dsv(",", "text/plain");
 // dsv2("data/happiness-age,country.csv")
@@ -100,8 +112,14 @@ dsv("data/happiness-income,country.csv")
 //             // draw2();
 //         });
 
-
-function draw()
+function mouse_over() {
+    svg.selectAll(".point")
+       .on("click", function(d) {
+            $("#country").text("CountryCode : "+d.countryCode);
+            $("#mean").text("Happiness   : "+d.mean);
+       })
+};
+function draw(label)
 {
 
 /* table1*/
@@ -162,12 +180,15 @@ svg.append("g")
      .attr("x", 60)
      .attr("y", 0)
      .style("text-anchor", "end")
-     .text("Income");
+     .text(label);
 
 svg.selectAll(".point")
     .data(dataset)
     .enter()
     .append("circle")
+    // .filter(function(d) {
+    //   threshold = document.getElementById("edQuantity1").value
+    //   return d.mean >threshold})
     .attr("class","point")
     .attr("cx",function(d){
           return z(d.countryCode);
@@ -176,7 +197,7 @@ svg.selectAll(".point")
           return w(d.subset);
        })
         .attr("r",function(d) {
-          return 0.15*y(d.mean);
+          return 17-0.15*y(d.mean);
         })
         .attr("fill", "#2ec7c9")
         .attr("fill-opacity" ,0.5)
@@ -193,7 +214,7 @@ svg2.append("g")
   .attr("x",width)
   .attr("y",-6)
   .style("text-anchor", "end")
-  .text("Income");
+  .text(label);
 
 /* Add  y axis to svg */
 svg2.append("g")
@@ -211,6 +232,7 @@ svg2.selectAll(".point")
    .data(dataset)
    .enter()
    .append("circle")
+   .filter(function(d) { return d.mean >threshold })
    .attr("class","point")
    .attr("cx",function(d){
 
@@ -224,6 +246,66 @@ svg2.selectAll(".point")
    .attr("fill-opacity" ,0.5)
    .attr("transform", "translate(" + padding.left + "," + -15+ ")");
 
+   d3.select("#nRadius").on("input", function() {
+     update(+this.value);
+   });
+   d3.select("#nRadius1").on("input", function() {
+     update1(+this.value);
+   });
+   // Initial starting radius of the circle
+   update(0);
+   update1(10);
+   // update the elements
+   function update(nRadius) {
+     // adjust the text on the range slider
+     d3.select("#nRadius-value").text(nRadius);
+     d3.select("#nRadius").property("value", nRadius);
+    svg.selectAll(".point")
+       .data(dataset)
+       .attr("fill-opacity" ,function(d) {
+             if (d.mean > nRadius) {
+               return 0.5;
+             }
+             else {
+               return 0.0;
+             }
+           });
+     svg2.selectAll(".point")
+        .data(dataset)
+        .attr("fill-opacity" ,function(d) {
+        if (d.mean > nRadius) {
+                  return 0.5;
+            }
+              else {
+                return 0.0;
+            }
+        });
+   }
+   function update1(nRadius1) {
+     // adjust the text on the range slider
+     d3.select("#nRadius-value1").text(nRadius1);
+     d3.select("#nRadius1").property("value", nRadius1);
+    svg.selectAll(".point")
+       .data(dataset)
+       .attr("fill-opacity" ,function(d) {
+             if (d.mean < nRadius1) {
+               return 0.5;
+             }
+             else {
+               return 0.0;
+             }
+           });
+      svg2.selectAll(".point")
+          .data(dataset)
+          .attr("fill-opacity" ,function(d) {
+                if (d.mean < nRadius1) {
+                  return 0.5;
+              }
+                else {
+                  return 0.0;
+                }
+            });
+   }
  }
 
  function draw2()
@@ -293,6 +375,16 @@ svg2.selectAll(".point")
     .attr("fill", "#2ec7c9")
     .attr("fill-opacity" ,0.5)
     .attr("transform", "translate(" + padding.left + "," + -15+ ")");
-
-
   }
+
+  $(document).ready(function() {
+      // add svg to page
+      load_data("data/happiness-income,country.csv","Income");
+
+      });
+
+      // dropdown
+  // $(".dropdown li").click(function(e) {
+  //       load_data(e.target.text);
+  //     });
+  // });
