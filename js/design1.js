@@ -1,19 +1,20 @@
-var width = 300;
+var width = 400;
 var height = 300;
 // var dataset = [ 1,1,1,1,1];
 var data = [];
 var allData = [];
 var countries = [];
 var pi = Math.PI;
-var outerRadius = width/2;
-var outerRadiusTwo = width/2;
-var innerRadius = width/4;
-var innerRadiusTwo = width/16;
+var outerRadius = height/2;
+var outerRadiusTwo = height/2;
+var innerRadius = height/4;
+var innerRadiusTwo = height/16;
 var selectedCountry = "UK";
-var selectedCountries = [];
+var selectedCountries = ["UK"];
 var svg;
 var countryId=0;
 
+var country_dic = {};
 var question_dic = {
   "Y11_Q41":"Happiness index",
   "Y11_Q40a":"Satisfaction with education",
@@ -24,7 +25,7 @@ var question_dic = {
   "Y11_Q40f":"Satisfaction with health",
   "Y11_Q40g":"Satisfaction with social life",
   "Y11_Q40h":"Satisfaction with economic situation of the country"
-}
+};
 
 $('#btn').on('click', function (e) {
 	addCountry(false);
@@ -52,7 +53,11 @@ function loadData(){
 			allData = d3.nest()
 	  			.key(function(d) { return d.countryCode; })
 	  			.entries(rows);
-	  		loadCountry();
+	  		$(allData).each(function(i,e){
+	  			country_dic[e.key]=i;
+	  			// console.log(e.key+" "+i);
+	  		})
+	  		loadCountry(0);
 			countryId++;
 			draw();
 		})
@@ -68,7 +73,7 @@ function addCountry(init){
 	else{
 		var newDiv =  document.createElement("div");
 		var id=countryId.toString();
-		newDiv.className = "col-md-4";
+		newDiv.className = "col-md-6";
 		newDiv.id = countryId.toString();
 		// newDiv.className = "country";
 		// newDiv.id = "c"+countryId.toString();
@@ -84,26 +89,21 @@ function addCountry(init){
 		$("#out").append(newDiv);
 	  	loadCountry(countryId);
 		$('a#delete'+id.toString()).on('click',function(){
-			console.log("~~~"+id.toString());
 			$('.col-md-4#'+id.toString()).remove();
+			selectedCountries.splice(id,1);
 		});
 		svg = d3.select("body").select("div.country#c"+countryId.toString()).append("svg")
 			.attr("width",width)
 			.attr("height",height);
 		countryId++;
-		draw();
+		selectedCountries.push(selectedCountry);
+		draw(id);
 	}
 
 }
 
 function loadCountry(id){
-	var idStr;
-	if(id){
-		idStr=id.toString();
-	}
-	else{
-		idStr='';
-	}
+	var idStr=id.toString();
 	countryList = $('#dropdown'+idStr+' .dropdown-menu');
 	countryList.html('');
 	$(allData).each(function(index, element){
@@ -118,6 +118,7 @@ function loadCountry(id){
 	// countryList.$('li a').on('click', function(){
 	$('#dropdown'+idStr+' .dropdown-menu li a').on('click', function(){
 	    selectedCountry = $(this).text();
+	    selectedCountries[id] = selectedCountry;
 	    draw(id);
 	});
 }
@@ -126,9 +127,11 @@ function updateCountry(){
 
 }
 function draw(id){
+	var idStr = "0";
 	if(id){
-		svg = d3.select("body").select("div.country#c"+id.toString()).select("svg");
+		idStr=id.toString();
 	}
+	svg = d3.select("body").select("div.country#c"+idStr).select("svg");
 	svg.html('');
 	for (var i = allData.length - 1; i >= 0; i--) {
 		if(allData[i].key == selectedCountry){
@@ -150,12 +153,12 @@ function draw(id){
 	        .data(data)
 	        .enter()
 	        .append("g")
-	        .attr("transform","translate("+outerRadius+","+outerRadius+")");
+	        .attr("transform","translate("+(outerRadius+100)+","+outerRadius+")");
 	// to display the name of the country in the center
-	svg.append("text").attr('x', width/2).attr('y', height/2)
+	svg.append("text").attr('x', width/2+40).attr('y', height/2+10)
 		.attr("font-family","sans-serif")
 		.attr('font-size', '20px')
-		.attr('fill', 'red')
+		.attr('fill', 'blue')
 		.text(selectedCountry);
 	arcs.append("path")
 	        .attr("fill",function(d,i){
@@ -163,8 +166,19 @@ function draw(id){
 	        })
 	        .attr("d",arc)
 	        .on("mouseover",function(d,i){
-	        	$("#question").text(question_dic[d.questionCode]);
-	        	$("#answer").text(d.mean);
+	        	var qc = d.questionCode;
+	        	$("#question").text(question_dic[qc]);
+	        	var ans=d.countryCode+" "+d.mean.toString();
+	        	$(selectedCountries).each(function(i,e){
+	        		if(e==d.countryCode) return;
+	        		$(allData[country_dic[e]].values).each(function(ii,ee){
+	        			if(ee.questionCode==qc){
+	        				ans+=","+e+" "+ee.mean;
+	        				return;
+	        			}
+	        		});
+	        	});
+	        	$("#answer").text(ans);
 	            // d3.select(this)
 	            //         .transition()
 	            //         .duration(2000)

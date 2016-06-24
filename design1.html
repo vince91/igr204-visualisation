@@ -6,27 +6,40 @@
     <script src="js/jquery-2.2.4.js"></script>
     <script src="js/bootstrap.js"></script>
 	<script type="text/javascript" src="js/d3.js"></script>
+	<style>
+		html {
+		    display: table;
+		    margin-left: 100px;
+		    margin-right: 100px;
+		}
+
+		body {
+		    display: table-cell;
+		    vertical-align: middle;
+		}
+	</style>
 </head>
 <body>
     <div class="page-header">
-    	<h1>Summary of One Country</h1>
+    	<h1>Summary/Comparison Between Countries</h1>
 	</div>
 	<div class="row">
-		<div class="col-md-2">
+		<div class="col-md-4">
 			<button type="button" class="btn btn-default", id="btn">+ Add a country</button>
 		</div>
-		<div class="col-md-4">
+		<div class="col-md-6">
 			<div id="question">Question</div>
 			<div id="answer">Answer</div>
 		</div>
 	</div>
 	
+	<ul margin:20;></ul>
 
 	<div class="row", id="out">
-		<div class="col-md-4">
+		<div class="col-md-6">
 			<div class="country", id="c0">
 			    <div class="container">
-					<div class="dropdown" id="dropdown">
+					<div class="dropdown" id="dropdown0">
 					  <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Country Code
 					  <span class="caret"></span></button>
 					  <ul class="dropdown-menu" id="countrylist">
