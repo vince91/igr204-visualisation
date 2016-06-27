@@ -37,3 +37,15 @@
   border-right: 8px solid transparent;
   border-left: 8px solid transparent;
 }
+
+.design2 #legend {
+	width: 300px;
+    border: 1px solid black;
+    border-radius: 8px;
+    top: 150px;
+    right: 50px;
+    position: fixed;
+    background: white;
+    padding: 20px;
+    text-align: justify;
+}

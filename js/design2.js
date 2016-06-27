@@ -27,14 +27,32 @@ function draw() {
        });
 };
 
+function draw2() {
+    svg.selectAll(".europe")
+       .datum(function(d) { return { countryCode: d3.select(this).attr("id") }})
+       .data(dataset, function(d) { return d.countryCode })
+       .style("fill", function(d) {
+          if(d.meanMale > d.meanFemale)
+            return "#107FC9";
+          if (d.meanMale == d.meanFemale)
+            return "grey"
+          return "#CB5B7C";     
+       })
+       .style("fill-opacity", 1);
+};
+
 function mouse_over() {
     svg.selectAll(".europe")
        .on("mousemove", function(d) {
             $("#country").text(isoCountries[d.countryCode.toUpperCase()]);
-            $("#mean").text(d.mean);
+
+            if (d.meanMale)
+              $("#mean").text("Male:" + d.meanMale + "; Female:" + d.meanFemale);
+            else
+              $("#mean").text(d.mean);
             $('#info-container').offset(currentMousePos).show();
 
-            if(!d.mean)
+            if(!d.mean && !d.meanMale)
               $("#info-container").hide();
        });
 
@@ -49,28 +67,47 @@ function load_data(theme) {
   var questionCode = question_dic[theme];
   $("h1").text(theme);
   // load csv
-  dsv("data/all_questions.csv", function(d) {
+
+  if (questionCode) {
+
+    $('#legend').text('A higher score means happier/more satisfied and it is representated by a darker blue.');
+    dsv("data/all_questions.csv", function(d) {
+        return {
+            countryCode: d.CountryCode.toLowerCase(),
+            questionCode: d.question_code,
+            subset: d.subset,
+            answer: d.answer,
+            mean: +d.Mean
+        }
+    }, function(error, rows) {
+        console.log(rows[0]);
+        dataset = rows.filter(function(row) {
+            return row.questionCode == questionCode;
+        });
+
+        color_opacity = d3.scale.linear()
+                        .domain(d3.extent(dataset, function(row) {
+                            return row.mean;
+                        })).range([0.2, 1]);
+        draw();
+        mouse_over();
+
+    });
+  } else {
+    $("#legend").text('Countries are colored in red when women are happier than men, blue when men are happier than women and grey when men and women have the same happiness score.')
+    dsv("data/happiness-male-female.csv", function(d) {
       return {
-          countryCode: d.CountryCode.toLowerCase(),
-          questionCode: d.question_code,
-          subset: d.subset,
-          answer: d.answer,
-          mean: +d.Mean
+        countryCode: d.CountryCode.toLowerCase(),
+        meanMale: d.mean_male,
+        meanFemale: d.mean_female
       }
-  }, function(error, rows) {
+    }, function(error, rows) {
+      dataset = rows;
       console.log(rows[0]);
-      dataset = rows.filter(function(row) {
-          return row.questionCode == questionCode;
-      });
+      draw2();
+    });
+  }
 
-      color_opacity = d3.scale.linear()
-                      .domain(d3.extent(dataset, function(row) {
-                          return row.mean;
-                      })).range([0.2, 1]);
-      draw();
-      mouse_over();
-
-  });
 }
 
 $(document).ready(function() {
