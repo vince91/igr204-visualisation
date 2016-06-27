@@ -3,6 +3,7 @@ var dataset = null;
 var count = 0;
 var color_opacity = null;
 var dsv = d3.dsv(";", "text/plain");
+var currentMousePos = {top:0, left:0}
 
 var question_dic = {
   "Happiness index" :"Y11_Q41",
@@ -16,7 +17,6 @@ var question_dic = {
   "Satisfaction with economic situation of the country": "Y11_Q40h"
 }
 
-
 function draw() {
     svg.selectAll(".europe")
        .datum(function(d) { return { countryCode: d3.select(this).attr("id") }})
@@ -29,14 +29,20 @@ function draw() {
 
 function mouse_over() {
     svg.selectAll(".europe")
-       .on("mouseover", function(d) {
+       .on("mousemove", function(d) {
             $("#country").text(d.countryCode);
             $("#mean").text(d.mean);
-       })
-       .on("mouseout", function() {
-            $("#country").text('');
-            $("#mean").text('');
-       })
+            $('#info-container').offset(currentMousePos).show();
+
+            if(!d.mean)
+              $("#info-container").hide();
+       });
+
+    $('.europe').hover(function() {
+      $("#info-container").show();
+    }, function() {
+      $("#info-container").hide();
+    })
 };
 
 function load_data(theme) {
@@ -83,4 +89,11 @@ $(document).ready(function() {
     $(".dropdown li").click(function(e) {
       load_data(e.target.text);
     });
+
+    // mouse position
+    $(document).mousemove(function(event) {
+        currentMousePos.left = event.pageX - 70;
+        currentMousePos.top = event.pageY + 20;
+    });
+
 });
