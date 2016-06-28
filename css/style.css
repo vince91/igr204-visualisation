@@ -3,22 +3,31 @@ body {
   padding-bottom: 20px;
 }
 
-.design2 .dropdown {
+#design1 {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+#design2 {
+  position: relative;
+}
+
+#design2 .dropdown {
 	position: absolute;
-	top: 30px;
+	top: 5px;
 	right: 50px;
 }
 
-.design2 svg {
+#design2 svg {
 	display:block;
 	margin: 0 auto;
 }
 
-.design2 path {
+#design2 path {
 	transition: all 0.5s linear;
 }
 
-.design2 #info-container {
+#design2 #info-container {
 	display: none;
 	width:140px;
   	color: #FFFFFF;
@@ -31,7 +40,7 @@ body {
   	padding-top: 2px;
 }
 
-.design2 #info-container:before {
+#design2 #info-container:before {
   content: '';
   position: absolute;
   top: -8px;
@@ -43,7 +52,7 @@ body {
   border-left: 8px solid transparent;
 }
 
-.design2 #legend {
+#design2 #legend {
 	width: 300px;
     border: 1px solid black;
     border-radius: 8px;

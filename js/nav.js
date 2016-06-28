@@ -8,9 +8,10 @@ $(document).ready(function() {
 
 		switch(text) {
 			case "Design #1":
+				$("#main").load("design1.html");
 				break;
 			case "Design #2":
-				console.log("ok");
+				$("#main").load("design2.html");
 				break;
 			case "Design #3":
 				break;
