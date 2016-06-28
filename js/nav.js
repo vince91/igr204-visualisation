@@ -6,6 +6,8 @@ $(document).ready(function() {
 		$("nav li").removeClass("active");
 		$(event.target).parent().addClass("active");
 
+		$("#main").empty();
+		$(".Chart").remove();
 		switch(text) {
 			case "Home":
 				$("#main").load("home.html");
