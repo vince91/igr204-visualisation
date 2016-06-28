@@ -7,6 +7,9 @@ $(document).ready(function() {
 		$(event.target).parent().addClass("active");
 
 		switch(text) {
+			case "Home":
+				$("#main").load("home.html");
+				break;
 			case "Design #1":
 				$("#main").load("design1.html");
 				break;
@@ -14,6 +17,7 @@ $(document).ready(function() {
 				$("#main").load("design2.html");
 				break;
 			case "Design #3":
+				$("#main").load("design3.html");
 				break;
 			default:
 		}

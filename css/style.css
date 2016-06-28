@@ -63,3 +63,18 @@ body {
     padding: 20px;
     text-align: justify;
 }
+
+.axis path,
+.axis line{
+    fill: none;
+    stroke: black;
+    shape-rendering: crispEdges;
+}
+.axis text {
+    font-family: sans-serif;
+    font-size: 11px;
+}
+
+div#inputbox{height:80px;width:150px;float:right;}
+div#tag {height:80px;width:350px;float:left;}
+div#chart{float:left;}
