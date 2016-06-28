@@ -14,6 +14,8 @@ var selectedCountries = ["UK"];
 var svg;
 var countryId=0;
 
+var currentMousePos = {top:0, left:0}
+
 var country_dic = {};
 var question_dic = {
   "Y11_Q41":"Happiness index",
@@ -32,6 +34,10 @@ $('#btn').on('click', function (e) {
 
 })
 addCountry(true);
+$(document).mousemove(function(event) {
+    currentMousePos.left = event.pageX - 70;
+    currentMousePos.top = event.pageY + 20;
+});
 function loadData(){
 	var dsv = d3.dsv(";", "text/plain");
 	dsv("data/all_questions.csv")
@@ -179,6 +185,11 @@ function draw(id){
 	        		});
 	        	});
 	        	$("#answer").text(ans);
+	            $('#info-container').offset(currentMousePos).show();
+
+	            if(!d.mean)
+	              $("#info-container").hide();
+
 	            // d3.select(this)
 	            //         .transition()
 	            //         .duration(2000)
