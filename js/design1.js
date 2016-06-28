@@ -1,4 +1,4 @@
-var width = 400;
+var width = 300;
 var height = 300;
 // var dataset = [ 1,1,1,1,1];
 var data = [];
@@ -35,8 +35,8 @@ $('#btn').on('click', function (e) {
 })
 addCountry(true);
 $(document).mousemove(function(event) {
-    currentMousePos.left = event.pageX - 70;
-    currentMousePos.top = event.pageY + 20;
+    currentMousePos.left = event.pageX;
+    currentMousePos.top = event.pageY;
 });
 function loadData(){
 	var dsv = d3.dsv(";", "text/plain");
@@ -159,9 +159,9 @@ function draw(id){
 	        .data(data)
 	        .enter()
 	        .append("g")
-	        .attr("transform","translate("+(outerRadius+100)+","+outerRadius+")");
+	        .attr("transform","translate("+(outerRadius)+","+outerRadius+")");
 	// to display the name of the country in the center
-	svg.append("text").attr('x', width/2+40).attr('y', height/2+10)
+	svg.append("text").attr('x', width/2-10).attr('y', height/2+10)
 		.attr("font-family","sans-serif")
 		.attr('font-size', '20px')
 		.attr('fill', 'blue')
@@ -189,43 +189,10 @@ function draw(id){
 
 	            if(!d.mean)
 	              $("#info-container").hide();
-
-	            // d3.select(this)
-	            //         .transition()
-	            //         .duration(2000)
-	            //         .delay(100)
-	            //         .ease("bounce")
-	            //         .attr("transform",function(d){
-	            //             // alert(arc.centroid(d));
-	            //             return "translate(" + arc.centroid(d) + ")";
-	            //         });
-	            //document.write(this);//this指的是当前选择的对象，既是mouseover选择的rect对象
-	        });
-	        // .on("mouseout",function(d,i){
-	        //     d3.select(this)
-	        //             .transition()
-	        //             .duration(2000)
-	        //             //.delay(10000)
-	        //             .attr("transform",function(d){
-	        //                 //alert(arc.centroid(d));
-	        //                 return "translate(" + [0,0] + ")";//centroid返回的是弧形的重心与弧心的相对位置
-	        //             });
-	        // })
-	        // .transition()
-	        // .duration(2000)
-	        // .ease("linear")
-	        // .attr("fill",function(d,i){
-	        //     return color(i+1);
-	        // });
-	 
-	// arcs.append("text")
-	//         .attr("transform",function(d){
-	//             return "translate(" + arc.centroid(d) + ")";
-	//         })
-	//         .attr("text-anchor","middle")
-	//         .text(function(d){
-	//             return d.value;
-	//         });
-	 
-	// console.log(data);
+	        })
+			$('svg').hover(function() {
+		      $("#info-container").show();
+		    }, function() {
+		      $("#info-container").hide();
+		    });
 }
