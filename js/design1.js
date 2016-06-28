@@ -89,7 +89,7 @@ function addCountry(init){
 		$("#out").append(newDiv);
 	  	loadCountry(countryId);
 		$('a#delete'+id.toString()).on('click',function(){
-			$('.col-md-4#'+id.toString()).remove();
+			$('.col-md-6#'+id.toString()).remove();
 			selectedCountries.splice(id,1);
 		});
 		svg = d3.select("body").select("div.country#c"+countryId.toString()).append("svg")
