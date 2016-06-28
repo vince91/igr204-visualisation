@@ -1,3 +1,8 @@
+body {
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
 .design2 .dropdown {
 	position: absolute;
 	top: 30px;

@@ -38,8 +38,7 @@
      inkscape:window-y="-4"
      inkscape:current-layer="outlines"
      showgrid="false"
-     inkscape:window-maximized="1" /><title
-     id="title4">Countries of Europe</title><desc
+     inkscape:window-maximized="1" /><desc
      id="desc6">
  A blank Map of Europe. Every country has an id which is its ISO-3116-1-ALPHA2 code in lower case.
  Members of the EU have a class=&quot;eu&quot;, countries in europe (which I found turkey to be but russia not) have a class=&quot;europe&quot;.
