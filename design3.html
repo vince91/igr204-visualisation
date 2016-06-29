@@ -1,6 +1,15 @@
+<style>
+body {
+  padding-top: 20px;
+  padding-bottom: 20px;
+	text-align:center;
+}
+
+</style>
+
 <div id="design3">
 	<div class="page-header">
-		<h1>Comparasion between different features</h1>
+		<h1>What make us happy?</h1>
   </div>
 <div class="dropdown" id="dropdown1">
  		<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Choose data
@@ -14,20 +23,22 @@
 		<p><label for="nRadius"
          style="display: inline-block; width: 240px; text-align: right">
          MinValue = <span id="nRadius-value">…</span>
-       </label><input type="range" min="1" max="10" id="nRadius">
+       </label><input type="range" min="1" max="10" step ="0.1" id="nRadius">
     </p>
 		<p>
        <label for="nRadius1"
          style="display: inline-block; width: 240px; text-align: right">
          MaxValue = <span id="nRadius-value1">…</span>
-       </label><input type="range" min="1" max="10" id="nRadius1">
+       </label><input type="range" min="1" max="10" step ="0.1" id="nRadius1">
     </p>
 
 	</div>
+	<!-- <div id="info-container"> -->
 	<div id = "tag">
 	<div id="country"></div>
 	<div id="mean"></div>
 </div>
+<!-- </div> -->
 	<ul margin:10;></ul>
 	<div class = "chart" id = "chart"></div>
 

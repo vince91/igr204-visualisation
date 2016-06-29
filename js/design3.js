@@ -1,8 +1,8 @@
 
 // var padding = { top: 20, right: 20, bottom: 30, left: 40 };
-var padding = { top: 40, right: 30, bottom: 30, left: 40 };
-width = 400 - padding.left - padding.right,
-height = 200 - padding.top - padding.bottom;
+var padding = { top: 40, right: 30, bottom: 30, left: 80 };
+width = 500 - padding.left - padding.right,
+height = 250 - padding.top - padding.bottom;
 width_ = 800 - padding.left - padding.right,
 height_ = 400 -padding.top - padding.bottom;
 var dataset = [];
@@ -83,38 +83,11 @@ dsv(url)
   });
 }
 
-// var dsv2 = d3.dsv(",", "text/plain");
-// dsv2("data/happiness-age,country.csv")
-//     .row(function(d,i){
-//         return {
-//         countryCode: d["CountryCode"],
-//         questionCode: d.question_code,
-//         subset: d.subset,
-//         answer: d.answer,
-//         mean: +d.Mean
-//          };
-//         })
-//       .get(function (error, rows) {
-//           console.log("Loaded "+ rows.length + " rows");
-//           if(rows.length >0){
-//             console.log("First row: ",rows[0])
-//             console.log("Last  row: ", rows[rows.length-1])
-//           }
-//         dataset = rows;
-//
-//         x = d3.scale.ordinal()
-//                          .domain(dataset.map(function(d){return(d.subset);}))
-//                          .rangeRoundBands([0,width]);
-//
-//         y = d3.scale.linear()
-//                           .domain(d3.extent(rows, function(d){ return d.mean;}))
-//                          .range([height,0]);
-//             // draw2();
-//         });
+
 
 function mouse_over() {
     svg.selectAll(".point")
-       .on("click", function(d) {
+       .on("mouseover", function(d) {
             $("#country").text("CountryCode : "+d.countryCode);
             $("#mean").text("Happiness   : "+d.mean);
        })
@@ -147,11 +120,9 @@ yScale.domain([d3.min(dataset, yValue)-1, d3.max(dataset, yValue)+1]);
 svg.append("g")
   .attr("class","axis")
   .attr("transform", "translate(0," + height_ + ")")
-  // .attr("transform", "rotate(-65)")
-  // .selectAll("text")
-  //       .attr("transform", "rotate(-65)")
   .call(xAxis_)
   .append("text")
+  .style("font-size","20px")
   .attr("class","label")
   .attr("x",width_)//labels
   .attr("y",-6)
@@ -159,25 +130,13 @@ svg.append("g")
   .text("Country")
 
 
-  // svg2.append("g")
-  //   .attr("class","axis")
-  //   .attr("transform", "translate(0," + height + ")")
-  //   .call(xAxis)
-  //   .append("text")
-  //   .attr("class","label")
-  //   .attr("x",width)
-  //   .attr("y",-6)
-  //   .style("text-anchor", "end")
-  //   .text("Income");
-  //
-
 svg.append("g")
      .attr("class","axis")
      .call(yAxis_)
-    //  .attr("transform", "rotate(180)")
      .append("text")
+     .style("font-size","20px")
      .attr("class", "label")
-     .attr("x", 60)
+     .attr("x", 75)
      .attr("y", 0)
      .style("text-anchor", "end")
      .text(label);
@@ -186,9 +145,6 @@ svg.selectAll(".point")
     .data(dataset)
     .enter()
     .append("circle")
-    // .filter(function(d) {
-    //   threshold = document.getElementById("edQuantity1").value
-    //   return d.mean >threshold})
     .attr("class","point")
     .attr("cx",function(d){
           return z(d.countryCode);
@@ -201,7 +157,7 @@ svg.selectAll(".point")
         })
         .attr("fill", "#2ec7c9")
         .attr("fill-opacity" ,0.5)
-        .attr("transform", "translate(" + padding.left*0.25+ "," + 40+ ")");
+        .attr("transform", "translate(" + padding.left*0.15+ "," + 40+ ")");
 
 
 /* add axis to svg*/
@@ -210,6 +166,7 @@ svg2.append("g")
   .attr("transform", "translate(0," + height + ")")
   .call(xAxis)
   .append("text")
+  .style("font-size","15px")
   .attr("class","label")
   .attr("x",width)
   .attr("y",-6)
@@ -221,8 +178,9 @@ svg2.append("g")
    .attr("class","axis")
    .call(yAxis)
    .append("text")
+   .style("font-size","15px")
    .attr("class", "label")
-   .attr("x", 60)
+   .attr("x", 80)
    .attr("y", 0)
    .style("text-anchor", "end")
    .text("Happiness");
@@ -244,7 +202,7 @@ svg2.selectAll(".point")
    .attr("r",5)
    .attr("fill", "#2ec7c9")
    .attr("fill-opacity" ,0.5)
-   .attr("transform", "translate(" + padding.left + "," + -15+ ")");
+   .attr("transform", "translate(" + padding.left*0.55 + "," + -15+ ")");
 
    d3.select("#nRadius").on("input", function() {
      update(+this.value);
@@ -354,10 +312,6 @@ svg2.selectAll(".point")
     .text("Happiness");
 
 
-
-
- // x.domain(dataset.map(function(d){ return d.subset; }));
-
  /* add points */
  svg2.selectAll(".point")
     .data(dataset)
@@ -365,7 +319,6 @@ svg2.selectAll(".point")
     .append("circle")
     .attr("class","point")
     .attr("cx",function(d){
-
       return x(d.subset);
     })
     .attr('cy', function(d) {
@@ -381,7 +334,6 @@ svg2.selectAll(".point")
       // add svg to page
       load_data("data/happiness-income,country.csv","Income");
       });
-    // <li><a href="#">Happiness-country,age</a></li>
       // dropdown
   $(".dropdown li").click(function(e) {
     if(e.target.text == "Happiness-country,income")
