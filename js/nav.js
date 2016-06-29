@@ -1,4 +1,5 @@
 $(document).ready(function() {
+	$("#main").load("home.html");
 	$("nav a").click(function(event) {
 		var text = event.target.text;
 		console.log(text);
