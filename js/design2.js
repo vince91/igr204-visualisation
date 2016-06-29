@@ -89,6 +89,16 @@ function load_data(theme) {
                         .domain(d3.extent(dataset, function(row) {
                             return row.mean;
                         })).range([0.2, 1]);
+
+        var min = d3.min(dataset, function(d) { return d.mean; });
+        var max = d3.max(dataset, function(d) { return d.mean; });
+        $("#grad1").text(min);
+        $("#grad2").text(max);
+        var text = "-webkit-linear-gradient(left,rgba(0,67,132,"+color_opacity(min)+"),rgba(0,67,132,"+color_opacity(max)+")";
+        $("#gradient").css("background", text);
+        $("#gradient-container").show();
+
+
         draw();
         mouse_over();
 
@@ -102,6 +112,7 @@ function load_data(theme) {
         meanFemale: d.mean_female
       }
     }, function(error, rows) {
+        $("#gradient-container").hide();
       dataset = rows;
       console.log(rows[0]);
       draw2();
